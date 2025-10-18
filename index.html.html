@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medinexis - Hospital Management System</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .register-card {
+            max-width: 500px;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .link-btn {
+            background: none;
+            color: #667eea;
+            text-decoration: underline;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .dashboard {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard.active {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px 0;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+        }
+
+        .sidebar-menu li {
+            margin: 0;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+
+        .page-header p {
+            color: #666;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-paid {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 14px;
+            width: auto;
+            margin: 0 5px;
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 2000;
+            min-width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .notification.danger {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+        }
+
+        .notification.info {
+            background: linear-gradient(135deg, #17a2b8, #3498db);
+        }
+
+        .notification.warning {
+            background: linear-gradient(135deg, #ffc107, #f39c12);
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+           
+            .sidebar {
+                width: 100%;
+            }
+           
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+           
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+                transform: translateY(-100px);
+            }
+
+            .notification.show {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <div class="logo">🏥 Medinexis</div>
+            <p style="text-align: center; color: #666; margin-bottom: 30px; font-size: 16px; font-weight: 500;">From Register to Records - all in one Platform</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <button type="button" class="btn btn-secondary" onclick="showRegister()">Register New Account</button>
+            </form>
+            <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 10px;">
+                <strong>Demo Admin Login:</strong><br>
+                Email: admin@hospital.com<br>
+                Password: Admin123
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Screen -->
+    <div id="registerScreen" class="login-container" style="display: none;">
+        <div class="login-card register-card">
+            <div class="logo">🏥 Register - Medinexis</div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regRole">Register as</label>
+                    <select id="regRole" required onchange="toggleSpecialization()">
+                        <option value="">Select Role</option>
+                        <option value="patient">Patient</option>
+                        <option value="doctor">Doctor</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="regFirstName">First Name</label>
+                        <input type="text" id="regFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regLastName">Last Name</label>
+                        <input type="text" id="regLastName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPhone">Phone Number</label>
+                    <input type="tel" id="regPhone" required>
+                </div>
+                <div class="form-group" id="specializationGroup" style="display: none;">
+                    <label for="regSpecialization">Specialization</label>
+                    <select id="regSpecialization">
+                        <option value="">Select Specialization</option>
+                        <option value="cardiology">Cardiology</option>
+                        <option value="neurology">Neurology</option>
+                        <option value="orthopedics">Orthopedics</option>
+                        <option value="pediatrics">Pediatrics</option>
+                        <option value="dermatology">Dermatology</option>
+                        <option value="psychiatry">Psychiatry</option>
+                        <option value="general">General Medicine</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirm Password</label>
+                    <input type="password" id="regConfirmPassword" required>
+                </div>
+                <button type="submit" class="btn">Register</button>
+                <button type="button" class="btn btn-secondary" onclick="showLogin()">Back to Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Admin Panel</h3>
+                <p id="adminName">Administrator</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" onclick="showSection('admin-overview')" class="active">Dashboard</a></li>
+                <li><a href="#" onclick="showSection('admin-staff')">Staff Management</a></li>
+                <li><a href="#" onclick="showSection('admin-patients')">Patient Management</a></li>
+                <li><a href="#" onclick="showSection('admin-appointments')">Appointments</a></li>
+                <li><a href="#" onclick="showSection('admin-records')">Medical Records</a></li>
+                <li><a href="#" onclick="showSection('admin-bills')">Bill Generation</a></li>
+                <li><a href="#" onclick="showSection('admin-system')">System Control</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <!-- Admin Overview -->
+            <div id="admin-overview" class="content-section active">
+                <div class="page-header">
+                    <h1>Dashboard Overview</h1>
+                    <p>Hospital management system statistics and overview</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalPatients">0</span>
+                        <span class="stat-label">Total Patients</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalDoctors">0</span>
+                        <span class="stat-label">Total Doctors</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalAppointments">0</span>
+                        <span class="stat-label">Appointments</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalRevenue">$0</span>
+                        <span class="stat-label">Revenue</span>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Recent Appointments</h3>
+                        <div id="recentAppointments">No recent appointments</div>
+                    </div>
+                    <div class="card">
+                        <h3>System Status</h3>
+                        <p>✅ All systems operational</p>
+                        <p>✅ Database connected</p>
+                        <p>✅ Security active</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff Management -->
+            <div id="admin-staff" class="content-section">
+                <div class="page-header">
+                    <h1>Staff Management</h1>
+                    <p>Manage hospital staff and their roles</p>
+                </div>
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Staff Members</h3>
+                        <button class="btn btn-small" onclick="openModal('addStaffModal')">Add New Staff</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th>Specialization</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffTable">
+                            <!-- Staff data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Patient Management -->
+            <div id="admin-patients" class="content-section">
+                <div class="page-header">
+                    <h1>Patient Management</h1>
+                    <p>Manage patient records and information</p>
+                </div>
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Registered Patients</h3>
+                        <button class="btn btn-small" onclick="openModal('addPatientModal')">Add New Patient</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Registration Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsTable">
+                            <!-- Patient data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin Appointments -->
+            <div id="admin-appointments" class="content-section">
+                <div class="page-header">
+                    <h1>Appointment Management</h1>
+                    <p>View and manage all appointments</p>
+                </div>
+                <div class="card">
+                    <h3>All Appointments</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminAppointmentsTable">
+                            <!-- Appointments data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Medical Records -->
+            <div id="admin-records" class="content-section">
+                <div class="page-header">
+                    <h1>Medical Records</h1>
+                    <p>Access and manage patient medical records</p>
+                </div>
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Patient Medical Records</h3>
+                        <button class="btn btn-small" onclick="openModal('addRecordModal')">Add Medical Record</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Diagnosis</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminRecordsTable">
+                            <!-- Records data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bill Generation -->
+            <div id="admin-bills" class="content-section">
+                <div class="page-header">
+                    <h1>Bill Management</h1>
+                    <p>Generate and manage patient bills</p>
+                </div>
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Patient Bills</h3>
+                        <button class="btn btn-small" onclick="openModal('addBillModal')">Generate New Bill</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Bill ID</th>
+                                <th>Patient</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminBillsTable">
+                            <!-- Bills data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- System Control -->
+            <div id="admin-system" class="content-section">
+                <div class="page-header">
+                    <h1>System Control</h1>
+                    <p>Manage system settings and security</p>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Profile Management</h3>
+                        <form id="adminProfileForm">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="adminFullName" value="System Administrator">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="adminEmail" value="admin@hospital.com">
+                            </div>
+                            <button type="submit" class="btn btn-small">Update Profile</button>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h3>Password Manager</h3>
+                        <form id="adminPasswordForm">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currentPassword">
+                            </div>
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" id="newPassword">
+                            </div>
+                            <button type="submit" class="btn btn-small">Change Password</button>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h3>Security Access</h3>
+                        <p>✅ Two-factor authentication enabled</p>
+                        <p>✅ SSL encryption active</p>
+                        <p>✅ Regular backups scheduled</p>
+                        <button class="btn btn-small btn-warning">Security Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor Dashboard -->
+    <div id="doctorDashboard" class="dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Doctor Panel</h3>
+                <p id="doctorName">Dr. Name</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" onclick="showSection('doctor-overview')" class="active">Dashboard</a></li>
+                <li><a href="#" onclick="showSection('doctor-appointments')">Appointments</a></li>
+                <li><a href="#" onclick="showSection('doctor-bills')">Bill Generation</a></li>
+                <li><a href="#" onclick="showSection('doctor-lab')">Lab Reports</a></li>
+                <li><a href="#" onclick="showSection('doctor-records')">Medical Records</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <!-- Doctor Overview -->
+            <div id="doctor-overview" class="content-section active">
+                <div class="page-header">
+                    <h1>Doctor Dashboard</h1>
+                    <p>Your daily overview and statistics</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="doctorTodayAppointments">0</span>
+                        <span class="stat-label">Today's Appointments</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="doctorPendingAppointments">0</span>
+                        <span class="stat-label">Pending Requests</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="doctorTotalPatients">0</span>
+                        <span class="stat-label">Total Patients</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="doctorRevenue">$0</span>
+                        <span class="stat-label">Monthly Revenue</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doctor Appointments -->
+            <div id="doctor-appointments" class="content-section">
+                <div class="page-header">
+                    <h1>Appointment Management</h1>
+                    <p>Manage your appointment requests and schedule</p>
+                </div>
+                <div class="card">
+                    <h3>Appointment Requests</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctorAppointmentsTable">
+                            <!-- Appointments will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Doctor Bills -->
+            <div id="doctor-bills" class="content-section">
+                <div class="page-header">
+                    <h1>Bill Generation</h1>
+                    <p>Generate bills and reports for your patients</p>
+                </div>
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Patient Bills</h3>
+                        <button class="btn btn-small" onclick="openModal('doctorBillModal')">Generate New Bill</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Bill ID</th>
+                                <th>Patient</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctorBillsTable">
+                            <!-- Bills will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Lab Reports -->
+            <div id="doctor-lab" class="content-section">
+                <div class="page-header">
+                    <h1>Lab Reports</h1>
+                    <p>View and manage patient lab results</p>
+                </div>
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Lab Results</h3>
+                        <button class="btn btn-small" onclick="openModal('labReportModal')">Upload Lab Report</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Test Type</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctorLabTable">
+                            <!-- Lab reports will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Doctor Records -->
+            <div id="doctor-records" class="content-section">
+                <div class="page-header">
+                    <h1>Medical Records</h1>
+                    <p>Access and manage patient medical records</p>
+                </div>
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Patient Records</h3>
+                        <button class="btn btn-small" onclick="openModal('doctorRecordModal')">Add Medical Record</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Last Visit</th>
+                                <th>Diagnosis</th>
+                                <th>Treatment</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctorRecordsTable">
+                            <!-- Records will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Dashboard -->
+    <div id="patientDashboard" class="dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Patient Portal</h3>
+                <p id="patientName">Patient Name</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" onclick="showSection('patient-overview')" class="active">Dashboard</a></li>
+                <li><a href="#" onclick="showSection('patient-booking')">Book Appointment</a></li>
+                <li><a href="#" onclick="showSection('patient-status')">Appointment Status</a></li>
+                <li><a href="#" onclick="showSection('patient-records')">Medical Records</a></li>
+                <li><a href="#" onclick="showSection('patient-bills')">My Bills</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <!-- Patient Overview -->
+            <div id="patient-overview" class="content-section active">
+                <div class="page-header">
+                    <h1>Welcome to Your Health Portal</h1>
+                    <p>Manage your appointments and health records</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="patientUpcomingAppointments">0</span>
+                        <span class="stat-label">Upcoming Appointments</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="patientTotalVisits">0</span>
+                        <span class="stat-label">Total Visits</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="patientPendingBills">0</span>
+                        <span class="stat-label">Pending Bills</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="patientRecords">0</span>
+                        <span class="stat-label">Medical Records</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appointment Booking -->
+            <div id="patient-booking" class="content-section">
+                <div class="page-header">
+                    <h1>Book Appointment</h1>
+                    <p>Schedule an appointment with our specialists</p>
+                </div>
+                <div class="card">
+                    <h3>New Appointment</h3>
+                    <form id="appointmentBookingForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Specialization</label>
+                                <select id="appointmentSpecialization" required onchange="loadAvailableDoctors()">
+                                    <option value="">Select Specialization</option>
+                                    <option value="cardiology">Cardiology</option>
+                                    <option value="neurology">Neurology</option>
+                                    <option value="orthopedics">Orthopedics</option>
+                                    <option value="pediatrics">Pediatrics</option>
+                                    <option value="dermatology">Dermatology</option>
+                                    <option value="psychiatry">Psychiatry</option>
+                                    <option value="general">General Medicine</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Doctor</label>
+                                <select id="appointmentDoctor" required>
+                                    <option value="">Select Doctor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Preferred Date</label>
+                                <input type="date" id="appointmentDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Preferred Time</label>
+                                <select id="appointmentTime" required>
+                                    <option value="">Select Time</option>
+                                    <option value="09:00">09:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="14:00">02:00 PM</option>
+                                    <option value="15:00">03:00 PM</option>
+                                    <option value="16:00">04:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Reason for Visit</label>
+                            <textarea id="appointmentReason" rows="3" placeholder="Describe your symptoms or reason for visit"></textarea>
+                        </div>
+                        <button type="submit" class="btn">Book Appointment</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Appointment Status -->
+            <div id="patient-status" class="content-section">
+                <div class="page-header">
+                    <h1>Appointment Status</h1>
+                    <p>Track your appointment requests and confirmations</p>
+                </div>
+                <div class="card">
+                    <h3>My Appointments</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Reason/Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientAppointmentsTable">
+                            <!-- Appointments will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Patient Records -->
+            <div id="patient-records" class="content-section">
+                <div class="page-header">
+                    <h1>Medical Records</h1>
+                    <p>View your medical history and records</p>
+                </div>
+                <div class="card">
+                    <h3>My Medical Records</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Doctor</th>
+                                <th>Diagnosis</th>
+                                <th>Treatment</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientRecordsTable">
+                            <!-- Records will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Patient Bills -->
+            <div id="patient-bills" class="content-section">
+                <div class="page-header">
+                    <h1>My Bills</h1>
+                    <p>View and pay your medical bills</p>
+                </div>
+                <div class="card">
+                    <h3>Billing History</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Bill ID</th>
+                                <th>Date</th>
+                                <th>Doctor</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientBillsTable">
+                            <!-- Bills will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Staff Modal -->
+    <div id="addStaffModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Staff Member</h3>
+                <span class="close" onclick="closeModal('addStaffModal')">&times;</span>
+            </div>
+            <form id="addStaffForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="staffFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" id="staffLastName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="staffRole" required>
+                        <option value="">Select Role</option>
+                        <option value="doctor">Doctor</option>
+                        <option value="nurse">Nurse</option>
+                        <option value="technician">Technician</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="staffEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Specialization (for doctors)</label>
+                    <select id="staffSpecialization">
+                        <option value="">Select Specialization</option>
+                        <option value="cardiology">Cardiology</option>
+                        <option value="neurology">Neurology</option>
+                        <option value="orthopedics">Orthopedics</option>
+                        <option value="pediatrics">Pediatrics</option>
+                        <option value="dermatology">Dermatology</option>
+                        <option value="psychiatry">Psychiatry</option>
+                        <option value="general">General Medicine</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Add Staff Member</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Patient Modal -->
+    <div id="addPatientModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Patient</h3>
+                <span class="close" onclick="closeModal('addPatientModal')">&times;</span>
+            </div>
+            <form id="addPatientForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="patientFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" id="patientLastName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="patientEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="patientPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" id="patientDOB" required>
+                </div>
+                <button type="submit" class="btn">Add Patient</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Bill Modal -->
+    <div id="addBillModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Generate New Bill</h3>
+                <span class="close" onclick="closeModal('addBillModal')">&times;</span>
+            </div>
+            <form id="addBillForm">
+                <div class="form-group">
+                    <label>Patient</label>
+                    <select id="billPatient" required>
+                        <option value="">Select Patient</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Service Description</label>
+                    <textarea id="billDescription" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Amount ($)</label>
+                    <input type="number" id="billAmount" step="0.01" required>
+                </div>
+                <button type="submit" class="btn">Generate Bill</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Doctor Bill Modal -->
+    <div id="doctorBillModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Generate Patient Bill</h3>
+                <span class="close" onclick="closeModal('doctorBillModal')">&times;</span>
+            </div>
+            <form id="doctorBillForm">
+                <div class="form-group">
+                    <label>Patient</label>
+                    <select id="doctorBillPatient" required>
+                        <option value="">Select Patient</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Consultation Fee ($)</label>
+                    <input type="number" id="consultationFee" step="0.01" value="150" required>
+                </div>
+                <div class="form-group">
+                    <label>Additional Services</label>
+                    <textarea id="additionalServices" rows="3" placeholder="List any additional services or procedures"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Additional Amount ($)</label>
+                    <input type="number" id="additionalAmount" step="0.01" value="0">
+                </div>
+                <button type="submit" class="btn">Generate Bill</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lab Report Modal -->
+    <div id="labReportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Upload Lab Report</h3>
+                <span class="close" onclick="closeModal('labReportModal')">&times;</span>
+            </div>
+            <form id="labReportForm">
+                <div class="form-group">
+                    <label>Patient</label>
+                    <select id="labPatient" required>
+                        <option value="">Select Patient</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Test Type</label>
+                    <input type="text" id="testType" required placeholder="e.g., Blood Test, X-Ray, MRI">
+                </div>
+                <div class="form-group">
+                    <label>Lab Report Image</label>
+                    <div class="file-upload" onclick="document.getElementById('labReportFile').click()">
+                        <input type="file" id="labReportFile" accept="image/*" required>
+                        <p>Click to upload lab report image</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="labNotes" rows="3" placeholder="Additional notes about the test results"></textarea>
+                </div>
+                <button type="submit" class="btn">Upload Report</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Appointment Action Modal -->
+    <div id="appointmentActionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="appointmentActionTitle">Appointment Action</h3>
+                <span class="close" onclick="closeModal('appointmentActionModal')">&times;</span>
+            </div>
+            <div id="appointmentActionContent">
+                <!-- Content will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Medical Record Modal (Admin) -->
+    <div id="addRecordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Medical Record</h3>
+                <span class="close" onclick="closeModal('addRecordModal')">&times;</span>
+            </div>
+            <form id="addRecordForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Patient</label>
+                        <select id="recordPatient" required>
+                            <option value="">Select Patient</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Doctor</label>
+                        <select id="recordDoctor" required>
+                            <option value="">Select Doctor</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Visit Date</label>
+                    <input type="date" id="recordDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Diagnosis</label>
+                    <textarea id="recordDiagnosis" rows="3" required placeholder="Enter diagnosis details"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Treatment/Prescription</label>
+                    <textarea id="recordTreatment" rows="3" required placeholder="Enter treatment plan and prescriptions"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Additional Notes</label>
+                    <textarea id="recordNotes" rows="2" placeholder="Any additional observations or notes"></textarea>
+                </div>
+                <button type="submit" class="btn">Add Medical Record</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Medical Record Modal (Doctor) -->
+    <div id="doctorRecordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Medical Record</h3>
+                <span class="close" onclick="closeModal('doctorRecordModal')">&times;</span>
+            </div>
+            <form id="doctorRecordForm">
+                <div class="form-group">
+                    <label>Patient</label>
+                    <select id="doctorRecordPatient" required>
+                        <option value="">Select Patient</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Visit Date</label>
+                    <input type="date" id="doctorRecordDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Diagnosis</label>
+                    <textarea id="doctorRecordDiagnosis" rows="3" required placeholder="Enter diagnosis details"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Treatment/Prescription</label>
+                    <textarea id="doctorRecordTreatment" rows="3" required placeholder="Enter treatment plan and prescriptions"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Additional Notes</label>
+                    <textarea id="doctorRecordNotes" rows="2" placeholder="Any additional observations or notes"></textarea>
+                </div>
+                <button type="submit" class="btn">Add Medical Record</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let users = [
+            {
+                id: 1,
+                email: 'admin@hospital.com',
+                password: 'Admin123',
+                role: 'admin',
+                firstName: 'System',
+                lastName: 'Administrator',
+                phone: '+1234567890'
+            }
+        ];
+        let appointments = [];
+        let medicalRecords = [];
+        let bills = [];
+        let labReports = [];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set minimum date for appointments to today
+            const today = new Date().toISOString().split('T')[0];
+            const dateInputs = document.querySelectorAll('input[type="date"]');
+            dateInputs.forEach(input => {
+                if (input.id === 'appointmentDate') {
+                    input.min = today;
+                }
+            });
+
+            // Load sample data
+            loadSampleData();
+            updateDashboardStats();
+        });
+
+        // Load sample data
+        function loadSampleData() {
+            // No hardcoded sample data - system starts fresh
+            // Only admin account exists by default
+        }
+
+        // Authentication functions
+        function showLogin() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('registerScreen').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('registerScreen').style.display = 'flex';
+        }
+
+        function toggleSpecialization() {
+            const role = document.getElementById('regRole').value;
+            const specializationGroup = document.getElementById('specializationGroup');
+            const specialization = document.getElementById('regSpecialization');
+           
+            if (role === 'doctor') {
+                specializationGroup.style.display = 'block';
+                specialization.required = true;
+            } else {
+                specializationGroup.style.display = 'none';
+                specialization.required = false;
+            }
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+           
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+           
+            const user = users.find(u => u.email === email && u.password === password);
+           
+            if (user) {
+                currentUser = user;
+                showDashboard(user.role);
+                showAlert('Login successful!', 'success');
+            } else {
+                showAlert('Invalid email or password!', 'danger');
+            }
+        });
+
+        // Registration form handler
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+           
+            const role = document.getElementById('regRole').value;
+            const firstName = document.getElementById('regFirstName').value;
+            const lastName = document.getElementById('regLastName').value;
+            const email = document.getElementById('regEmail').value;
+            const phone = document.getElementById('regPhone').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const specialization = document.getElementById('regSpecialization').value;
+           
+            // Validation
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match!', 'danger');
+                return;
+            }
+           
+            if (users.find(u => u.email === email)) {
+                showAlert('Email already exists!', 'danger');
+                return;
+            }
+           
+            if (role === 'doctor' && !specialization) {
+                showAlert('Please select a specialization for doctor registration!', 'danger');
+                return;
+            }
+           
+            // Create new user
+            const newUser = {
+                id: users.length + 1,
+                email,
+                password,
+                role,
+                firstName,
+                lastName,
+                phone,
+                registrationDate: new Date().toISOString().split('T')[0]
+            };
+           
+            if (role === 'doctor') {
+                newUser.specialization = specialization;
+            }
+           
+            users.push(newUser);
+            showAlert('Registration successful! You can now login.', 'success');
+            showLogin();
+           
+            // Reset form
+            document.getElementById('registerForm').reset();
+            toggleSpecialization();
+        });
+
+        // Dashboard functions
+        function showDashboard(role) {
+            // Hide login/register screens
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('registerScreen').style.display = 'none';
+           
+            // Hide all dashboards
+            document.getElementById('adminDashboard').classList.remove('active');
+            document.getElementById('doctorDashboard').classList.remove('active');
+            document.getElementById('patientDashboard').classList.remove('active');
+           
+            // Show appropriate dashboard and set default section
+            if (role === 'admin') {
+                document.getElementById('adminDashboard').classList.add('active');
+                document.getElementById('adminName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                showSection('admin-overview');
+                loadAdminData();
+            } else if (role === 'doctor') {
+                document.getElementById('doctorDashboard').classList.add('active');
+                document.getElementById('doctorName').textContent = `Dr. ${currentUser.firstName} ${currentUser.lastName}`;
+                showSection('doctor-overview');
+                loadDoctorData();
+            } else if (role === 'patient') {
+                document.getElementById('patientDashboard').classList.add('active');
+                document.getElementById('patientName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                showSection('patient-overview');
+                loadPatientData();
+            }
+           
+            updateDashboardStats();
+        }
+
+        function showSection(sectionId) {
+            // Hide all content sections in all dashboards
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+           
+            // Show selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+           
+            // Update sidebar active state only if event exists (clicked by user)
+            if (typeof event !== 'undefined' && event && event.target) {
+                const currentDashboard = event.target.closest('.dashboard');
+                if (currentDashboard) {
+                    const sidebarLinks = currentDashboard.querySelectorAll('.sidebar-menu a');
+                    sidebarLinks.forEach(link => link.classList.remove('active'));
+                    event.target.classList.add('active');
+                }
+            } else {
+                // If called programmatically, update the correct dashboard's sidebar
+                let dashboardId = '';
+                if (sectionId.includes('admin-')) dashboardId = 'adminDashboard';
+                else if (sectionId.includes('doctor-')) dashboardId = 'doctorDashboard';
+                else if (sectionId.includes('patient-')) dashboardId = 'patientDashboard';
+               
+                if (dashboardId) {
+                    const dashboard = document.getElementById(dashboardId);
+                    const sidebarLinks = dashboard.querySelectorAll('.sidebar-menu a');
+                    sidebarLinks.forEach(link => link.classList.remove('active'));
+                   
+                    // Set the first link (Dashboard) as active
+                    const firstLink = dashboard.querySelector('.sidebar-menu a');
+                    if (firstLink) {
+                        firstLink.classList.add('active');
+                    }
+                }
+            }
+           
+            // Load section-specific data
+            if (sectionId.includes('staff')) loadStaffTable();
+            if (sectionId.includes('patients')) loadPatientsTable();
+            if (sectionId.includes('appointments')) {
+                if (sectionId === 'admin-appointments') loadAppointmentsTable();
+                else if (sectionId === 'doctor-appointments') loadDoctorAppointments();
+                else if (sectionId === 'patient-status') loadPatientAppointments();
+            }
+            if (sectionId.includes('records')) {
+                if (sectionId === 'admin-records') loadRecordsTable();
+                else if (sectionId === 'doctor-records') loadDoctorRecords();
+                else if (sectionId === 'patient-records') loadPatientRecords();
+            }
+            if (sectionId.includes('bills')) {
+                if (sectionId === 'admin-bills') loadBillsTable();
+                else if (sectionId === 'doctor-bills') loadDoctorBills();
+                else if (sectionId === 'patient-bills') loadPatientBills();
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+           
+            // Hide all dashboards
+            document.getElementById('adminDashboard').classList.remove('active');
+            document.getElementById('doctorDashboard').classList.remove('active');
+            document.getElementById('patientDashboard').classList.remove('active');
+           
+            // Show login screen
+            showLogin();
+           
+            // Reset forms
+            document.getElementById('loginForm').reset();
+            showAlert('Logged out successfully!', 'info');
+        }
+
+        // Data loading functions
+        function loadAdminData() {
+            loadStaffTable();
+            loadPatientsTable();
+            loadAppointmentsTable();
+            loadRecordsTable();
+            loadBillsTable();
+            populatePatientSelects();
+            populateDoctorSelects();
+        }
+
+        function loadDoctorData() {
+            loadDoctorAppointments();
+            loadDoctorBills();
+            loadDoctorRecords();
+            loadDoctorLab();
+            populatePatientSelects();
+        }
+
+        function loadPatientData() {
+            loadPatientAppointments();
+            loadPatientRecords();
+            loadPatientBills();
+            loadAvailableDoctors();
+        }
+
+        function loadStaffTable() {
+            const tbody = document.getElementById('staffTable');
+            const staff = users.filter(u => u.role !== 'patient');
+           
+            tbody.innerHTML = staff.map(member => `
+                <tr>
+                    <td>${member.firstName} ${member.lastName}</td>
+                    <td>${member.role.charAt(0).toUpperCase() + member.role.slice(1)}</td>
+                    <td>${member.email}</td>
+                    <td>${member.specialization || 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-small btn-warning" onclick="editStaff(${member.id})">Edit</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteStaff(${member.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadPatientsTable() {
+            const tbody = document.getElementById('patientsTable');
+            const patients = users.filter(u => u.role === 'patient');
+           
+            tbody.innerHTML = patients.map(patient => `
+                <tr>
+                    <td>${patient.firstName} ${patient.lastName}</td>
+                    <td>${patient.email}</td>
+                    <td>${patient.phone}</td>
+                    <td>${patient.registrationDate || 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-small btn-warning" onclick="editPatient(${patient.id})">Edit</button>
+                        <button class="btn btn-small btn-danger" onclick="deletePatient(${patient.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadAppointmentsTable() {
+            const tbody = document.getElementById('adminAppointmentsTable');
+           
+            tbody.innerHTML = appointments.map(appointment => {
+                const patient = users.find(u => u.id === appointment.patientId);
+                const doctor = users.find(u => u.id === appointment.doctorId);
+               
+                return `
+                    <tr>
+                        <td>${patient ? patient.firstName + ' ' + patient.lastName : 'Unknown'}</td>
+                        <td>Dr. ${doctor ? doctor.firstName + ' ' + doctor.lastName : 'Unknown'}</td>
+                        <td>${appointment.date}</td>
+                        <td>${appointment.time}</td>
+                        <td><span class="status-badge status-${appointment.status}">${appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}</span></td>
+                        <td>
+                            <button class="btn btn-small btn-warning" onclick="editAppointment(${appointment.id})">Edit</button>
+                            <button class="btn btn-small btn-danger" onclick="cancelAppointment(${appointment.id})">Cancel</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadRecordsTable() {
+            const tbody = document.getElementById('adminRecordsTable');
+           
+            tbody.innerHTML = medicalRecords.map(record => {
+                const patient = users.find(u => u.id === record.patientId);
+                const doctor = users.find(u => u.id === record.doctorId);
+               
+                return `
+                    <tr>
+                        <td>${patient ? patient.firstName + ' ' + patient.lastName : 'Unknown'}</td>
+                        <td>Dr. ${doctor ? doctor.firstName + ' ' + doctor.lastName : 'Unknown'}</td>
+                        <td>${record.date}</td>
+                        <td>${record.diagnosis}</td>
+                        <td>
+                            <button class="btn btn-small" onclick="viewRecord(${record.id})">View</button>
+                            <button class="btn btn-small btn-warning" onclick="editRecord(${record.id})">Edit</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadBillsTable() {
+            const tbody = document.getElementById('adminBillsTable');
+           
+            tbody.innerHTML = bills.map(bill => {
+                const patient = users.find(u => u.id === bill.patientId);
+               
+                return `
+                    <tr>
+                        <td>#${bill.id.toString().padStart(4, '0')}</td>
+                        <td>${patient ? patient.firstName + ' ' + patient.lastName : 'Unknown'}</td>
+                        <td>$${bill.amount.toFixed(2)}</td>
+                        <td>${bill.date}</td>
+                        <td><span class="status-badge status-${bill.status}">${bill.status.charAt(0).toUpperCase() + bill.status.slice(1)}</span></td>
+                        <td>
+                            <button class="btn btn-small" onclick="viewBill(${bill.id})">View</button>
+                            <button class="btn btn-small btn-warning" onclick="editBill(${bill.id})">Edit</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadDoctorAppointments() {
+            const tbody = document.getElementById('doctorAppointmentsTable');
+            const doctorAppointments = appointments.filter(a => a.doctorId === currentUser.id);
+           
+            tbody.innerHTML = doctorAppointments.map(appointment => {
+                const patient = users.find(u => u.id === appointment.patientId);
+               
+                return `
+                    <tr>
+                        <td>${patient ? patient.firstName + ' ' + patient.lastName : 'Unknown'}</td>
+                        <td>${appointment.date}</td>
+                        <td>${appointment.time}</td>
+                        <td>${appointment.reason}</td>
+                        <td><span class="status-badge status-${appointment.status}">${appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}</span></td>
+                        <td>
+                            ${appointment.status === 'pending' ? `
+                                <button class="btn btn-small btn-success" onclick="approveAppointment(${appointment.id})">Accept</button>
+                                <button class="btn btn-small btn-danger" onclick="rejectAppointment(${appointment.id})">Reject</button>
+                            ` : `
+                                <button class="btn btn-small" onclick="viewAppointment(${appointment.id})">View</button>
+                            `}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadDoctorBills() {
+            const tbody = document.getElementById('doctorBillsTable');
+            const doctorBills = bills.filter(b => b.doctorId === currentUser.id);
+           
+            tbody.innerHTML = doctorBills.map(bill => {
+                const patient = users.find(u => u.id === bill.patientId);
+               
+                return `
+                    <tr>
+                        <td>#${bill.id.toString().padStart(4, '0')}</td>
+                        <td>${patient ? patient.firstName + ' ' + patient.lastName : 'Unknown'}</td>
+                        <td>$${bill.amount.toFixed(2)}</td>
+                        <td>${bill.date}</td>
+                        <td><span class="status-badge status-${bill.status}">${bill.status.charAt(0).toUpperCase() + bill.status.slice(1)}</span></td>
+                        <td>
+                            <button class="btn btn-small" onclick="viewBill(${bill.id})">View</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadDoctorRecords() {
+            const tbody = document.getElementById('doctorRecordsTable');
+            const doctorRecords = medicalRecords.filter(r => r.doctorId === currentUser.id);
+           
+            tbody.innerHTML = doctorRecords.map(record => {
+                const patient = users.find(u => u.id === record.patientId);
+               
+                return `
+                    <tr>
+                        <td>${patient ? patient.firstName + ' ' + patient.lastName : 'Unknown'}</td>
+                        <td>${record.date}</td>
+                        <td>${record.diagnosis}</td>
+                        <td>${record.treatment}</td>
+                        <td>
+                            <button class="btn btn-small" onclick="viewRecord(${record.id})">View</button>
+                            <button class="btn btn-small btn-warning" onclick="editRecord(${record.id})">Edit</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadDoctorLab() {
+            const tbody = document.getElementById('doctorLabTable');
+ 
